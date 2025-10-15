@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareStream360 - Telkom Presentation</title>
+    <style>
+        :root {
+            /* Telkom Brand Colors */
+            --telkom-blue: #0066CC;
+            --telkom-dark-blue: #004499;
+            --telkom-light-blue: #3399FF;
+            --telkom-white: #FFFFFF;
+            --telkom-gray: #F5F5F5;
+            --telkom-dark-gray: #333333;
+            --telkom-accent: #FF6600;
+            
+            /* Design System Variables */
+            --color-background: var(--telkom-white);
+            --color-surface: var(--telkom-gray);
+            --color-text: var(--telkom-dark-gray);
+            --color-primary: var(--telkom-blue);
+            --color-primary-hover: var(--telkom-dark-blue);
+            --color-accent: var(--telkom-accent);
+            
+            --font-family-base: "Segoe UI", "Arial", sans-serif;
+            --font-size-xs: 14px;
+            --font-size-sm: 16px;
+            --font-size-base: 18px;
+            --font-size-lg: 24px;
+            --font-size-xl: 32px;
+            --font-size-2xl: 40px;
+            --font-size-3xl: 48px;
+            
+            --space-xs: 8px;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family-base);
+            background: linear-gradient(135deg, var(--telkom-blue) 0%, var(--telkom-dark-blue) 100%);
+            color: var(--color-text);
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .presentation-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: var(--color-background);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--space-xl);
+            position: relative;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.5s ease-in-out;
+        }
+        
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .slide-header {
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .slide-title {
+            font-size: var(--font-size-2xl);
+            color: var(--color-primary);
+            font-weight: bold;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .slide-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--telkom-dark-gray);
+            font-weight: 300;
+        }
+        
+        .slide-content {
+            height: calc(100% - 120px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-primary) transparent;
+        }
+        
+        .slide-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .slide-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .slide-content::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 3px;
+        }
+        
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .bullet-list li {
+            position: relative;
+            padding-left: var(--space-lg);
+            margin-bottom: var(--space-sm);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+        }
+        
+        .bullet-list li::before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .feature-card {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .feature-card h4 {
+            color: var(--color-primary);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .feature-card p {
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+        }
+        
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, var(--color-primary), var(--telkom-light-blue));
+            color: white;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .metric-number {
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .metric-label {
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: var(--space-lg);
+        }
+        
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--color-primary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--space-lg);
+            padding-left: var(--space-lg);
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -8px;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--color-primary);
+        }
+        
+        .timeline-title {
+            font-size: var(--font-size-lg);
+            color: var(--color-primary);
+            font-weight: bold;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .timeline-duration {
+            font-size: var(--font-size-sm);
+            color: var(--color-accent);
+            font-weight: bold;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .navigation {
+            position: absolute;
+            bottom: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .nav-btn {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+        
+        .nav-btn:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            background: var(--color-surface);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+        
+        .slide-overview {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .slide-overview:hover {
+            background: var(--color-primary-hover);
+        }
+        
+        .overview-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-sm);
+            min-width: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .overview-menu.show {
+            display: block;
+        }
+        
+        .overview-item {
+            padding: var(--space-sm);
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: background 0.3s ease;
+        }
+        
+        .overview-item:hover {
+            background: var(--color-surface);
+        }
+        
+        .overview-item:last-child {
+            border-bottom: none;
+        }
+        
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-primary), var(--telkom-light-blue));
+            color: white;
+        }
+        
+        .title-slide .slide-title {
+            font-size: var(--font-size-3xl);
+            color: white;
+            margin-bottom: var(--space-md);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .title-slide .slide-subtitle {
+            font-size: var(--font-size-xl);
+            color: rgba(255,255,255,0.9);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .company-logo {
+            font-size: var(--font-size-lg);
+            font-weight: bold;
+            opacity: 0.8;
+        }
+        
+        .architecture-diagram {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .module-box {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border: 3px solid var(--color-primary);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .module-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .module-box:hover::before {
+            left: 100%;
+        }
+        
+        .module-box:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .module-title {
+            font-size: var(--font-size-lg);
+            color: var(--color-primary);
+            font-weight: bold;
+            margin-bottom: var(--space-sm);
+        }
+        
+        @media (max-width: 768px) {
+            .slide {
+                width: 95%;
+                height: 90vh;
+                padding: var(--space-md);
+            }
+            
+            .slide-title {
+                font-size: var(--font-size-xl);
+            }
+            
+            .feature-grid,
+            .architecture-diagram {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, var(--telkom-light-blue), var(--color-primary));
+            color: white;
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            margin: var(--space-lg) 0;
+            text-align: center;
+        }
+        
+        .highlight-box h3 {
+            margin-bottom: var(--space-sm);
+            font-size: var(--font-size-xl);
+        }
+        
+        .benefit-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .benefit-category {
+            background: var(--color-surface);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border-left: 5px solid var(--color-primary);
+        }
+        
+        .benefit-category h4 {
+            color: var(--color-primary);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active title-slide" data-slide="1">
+            <h1 class="slide-title">CareStream360</h1>
+            <p class="slide-subtitle">Revolutionizing Customer Experience at Telkom</p>
+            <p class="company-logo">AI-Powered Proactive Customer Care</p>
+        </div>
+        
+        <!-- Slide 2: Problem Statement -->
+        <div class="slide" data-slide="2">
+            <div class="slide-header">
+                <h2 class="slide-title">Problem Statement</h2>
+                <p class="slide-subtitle">Current Challenges in Customer Experience</p>
+            </div>
+            <div class="slide-content">
+                <ul class="bullet-list">
+                    <li>Reliance on technical KPIs fails to reflect actual customer experience</li>
+                    <li>Reactive support model negatively impacts customer loyalty</li>
+                    <li>Increased customer churn due to poor experience detection</li>
+                    <li>Lack of proactive system for real-time customer session monitoring</li>
+                </ul>
+                <div class="highlight-box">
+                    <h3>The Gap</h3>
+                    <p>Traditional metrics measure network performance but miss the human experience</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Solution Overview -->
+        <div class="slide" data-slide="3">
+            <div class="slide-header">
+                <h2 class="slide-title">Solution Overview</h2>
+                <p class="slide-subtitle">CareStream360: AI-Powered Experience Management</p>
+            </div>
+            <div class="slide-content">
+                <ul class="bullet-list">
+                    <li>Shift from reactive to proactive customer experience management</li>
+                    <li>AI-powered system combining technical metrics with behavioral analytics</li>
+                    <li>Real-time monitoring and predictive issue prevention</li>
+                    <li>Automated customer care and proactive communication</li>
+                </ul>
+                <div class="highlight-box">
+                    <h3>Core Philosophy</h3>
+                    <p>Prevent problems before customers experience them</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: Key Innovation -->
+        <div class="slide" data-slide="4">
+            <div class="slide-header">
+                <h2 class="slide-title">Key Innovation</h2>
+                <p class="slide-subtitle">From KPI to KQE Approach</p>
+            </div>
+            <div class="slide-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Traditional KPI Model</h4>
+                        <p>Focuses on technical performance metrics like latency, throughput, and error rates without considering actual user experience</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>New KQE Model</h4>
+                        <p>Combines technical KPIs with behavioral data to measure actual Quality of Experience from the customer's perspective</p>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <h3>KQE = Key Quality of Experience</h3>
+                    <p>The measure that truly matters to customers and business success</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 5: System Architecture -->
+        <div class="slide" data-slide="5">
+            <div class="slide-header">
+                <h2 class="slide-title">System Architecture</h2>
+                <p class="slide-subtitle">Four Core Modules Working in Harmony</p>
+            </div>
+            <div class="slide-content">
+                <div class="architecture-diagram">
+                    <div class="module-box">
+                        <h4 class="module-title">Real-Time Session Monitoring</h4>
+                        <p>Continuous monitoring of customer sessions, app usage, and network behavior</p>
+                    </div>
+                    <div class="module-box">
+                        <h4 class="module-title">QoE Scoring Engine</h4>
+                        <p>AI model combining KPIs with behavioral analytics to generate experience scores</p>
+                    </div>
+                    <div class="module-box">
+                        <h4 class="module-title">Proactive Service &amp; Insights</h4>
+                        <p>Automatic ticket logging and customer notifications before complaints</p>
+                    </div>
+                    <div class="module-box">
+                        <h4 class="module-title">Predictive Analytics</h4>
+                        <p>ML models for preventing issues using historical patterns and environmental variables</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Real-Time Monitoring -->
+        <div class="slide" data-slide="6">
+            <div class="slide-header">
+                <h2 class="slide-title">Real-Time Monitoring</h2>
+                <p class="slide-subtitle">Continuous Customer Session Monitoring</p>
+            </div>
+            <div class="slide-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Privacy-Preserving Agents</h4>
+                        <p>Lightweight monitoring that respects customer privacy while gathering essential experience data</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Granular Data Collection</h4>
+                        <p>Detailed customer activity data including app usage patterns and service interactions</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Session Anomaly Detection</h4>
+                        <p>Real-time identification of unusual patterns that may indicate poor experience</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Behavior Pattern Analysis</h4>
+                        <p>Understanding customer behavior to predict satisfaction and potential issues</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 7: QoE Scoring Engine -->
+        <div class="slide" data-slide="7">
+            <div class="slide-header">
+                <h2 class="slide-title">QoE Scoring Engine</h2>
+                <p class="slide-subtitle">AI-Powered Experience Scoring</p>
+            </div>
+            <div class="slide-content">
+                <ul class="bullet-list">
+                    <li>Hybrid AI model combining technical KPIs with behavioral analytics</li>
+                    <li>Continuous KQE score generation for each customer session</li>
+                    <li>User behavior adjustment mechanisms for personalized thresholds</li>
+                    <li>Experience threshold management based on service type and customer profile</li>
+                </ul>
+                <div class="highlight-box">
+                    <h3>Intelligence at Work</h3>
+                    <p>Machine learning algorithms learn from customer behavior patterns to provide accurate experience predictions</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Proactive Customer Care -->
+        <div class="slide" data-slide="8">
+            <div class="slide-header">
+                <h2 class="slide-title">Proactive Customer Care</h2>
+                <p class="slide-subtitle">Resolution Before Complaints</p>
+            </div>
+            <div class="slide-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Automatic Ticket Generation</h4>
+                        <p>QoE-based tickets created automatically with comprehensive diagnostic data</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Customer Notification System</h4>
+                        <p>Proactive communication via SMS and app alerts to keep customers informed</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Reassurance Messaging</h4>
+                        <p>Proactive messaging to customers before they even notice issues</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Operations Dashboard</h4>
+                        <p>Real-time dashboard for network operations teams to monitor and respond</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 9: Predictive Analytics -->
+        <div class="slide" data-slide="9">
+            <div class="slide-header">
+                <h2 class="slide-title">Predictive Analytics</h2>
+                <p class="slide-subtitle">Preventing Issues Before They Occur</p>
+            </div>
+            <div class="slide-content">
+                <ul class="bullet-list">
+                    <li>Historical pattern analysis to identify recurring issue trends</li>
+                    <li>Environmental variable consideration including weather, events, and usage patterns</li>
+                    <li>Preventive action triggers for proactive network optimization</li>
+                    <li>Intelligent bandwidth allocation optimization based on predicted demand</li>
+                </ul>
+                <div class="highlight-box">
+                    <h3>Machine Learning Power</h3>
+                    <p>Advanced algorithms predict and prevent issues using comprehensive data analysis</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 10: Dashboard & Insights -->
+        <div class="slide" data-slide="10">
+            <div class="slide-header">
+                <h2 class="slide-title">Dashboard &amp; Insights</h2>
+                <p class="slide-subtitle">Real-Time QoE Visualization</p>
+            </div>
+            <div class="slide-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Real-Time Experience Insights</h4>
+                        <p>Live visualization of customer experience metrics across the network</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Data-Driven Priority Setting</h4>
+                        <p>Intelligent prioritization of issues based on customer impact and business value</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Unified Customer-Technical View</h4>
+                        <p>Single dashboard combining customer experience data with technical metrics</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Automated Issue Detection</h4>
+                        <p>Intelligent alerts and automated detection of experience degradation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 11: Business Benefits -->
+        <div class="slide" data-slide="11">
+            <div class="slide-header">
+                <h2 class="slide-title">Business Benefits</h2>
+                <p class="slide-subtitle">Transforming Customer Relationships</p>
+            </div>
+            <div class="slide-content">
+                <div class="benefit-categories">
+                    <div class="benefit-category">
+                        <h4>Customer Benefits</h4>
+                        <ul class="bullet-list">
+                            <li>Proactive issue resolution</li>
+                            <li>Improved service reliability</li>
+                            <li>Enhanced trust and satisfaction</li>
+                            <li>Reduced service interruptions</li>
+                        </ul>
+                    </div>
+                    <div class="benefit-category">
+                        <h4>Business Benefits</h4>
+                        <ul class="bullet-list">
+                            <li>Reduced customer churn</li>
+                            <li>Increased customer loyalty</li>
+                            <li>Operational efficiency gains</li>
+                            <li>Competitive advantage</li>
+                        </ul>
+                    </div>
+                    <div class="benefit-category">
+                        <h4>Technical Benefits</h4>
+                        <ul class="bullet-list">
+                            <li>Real-time experience insights</li>
+                            <li>Automated issue detection</li>
+                            <li>Unified monitoring approach</li>
+                            <li>Predictive maintenance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 12: Implementation Roadmap -->
+        <div class="slide" data-slide="12">
+            <div class="slide-header">
+                <h2 class="slide-title">Implementation Roadmap</h2>
+                <p class="slide-subtitle">Phased Deployment Strategy</p>
+            </div>
+            <div class="slide-content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4 class="timeline-title">Phase 1: Pilot Deployment</h4>
+                        <p class="timeline-duration">3 months</p>
+                        <p>Limited geographic area, core monitoring setup, initial data collection</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="timeline-title">Phase 2: AI Model Training</h4>
+                        <p class="timeline-duration">2 months</p>
+                        <p>QoE scoring engine development, predictive analytics model training</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="timeline-title">Phase 3: Full Rollout</h4>
+                        <p class="timeline-duration">4 months</p>
+                        <p>Nationwide deployment, dashboard integration, full system activation</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="timeline-title">Phase 4: Optimization</h4>
+                        <p class="timeline-duration">Ongoing</p>
+                        <p>Continuous improvement, feature enhancement, performance tuning</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 13: Expected Outcomes -->
+        <div class="slide" data-slide="13">
+            <div class="slide-header">
+                <h2 class="slide-title">Expected Outcomes</h2>
+                <p class="slide-subtitle">Measurable Success Metrics</p>
+            </div>
+            <div class="slide-content">
+                <div class="metrics-container">
+                    <div class="metric-card">
+                        <div class="metric-number">+25%</div>
+                        <div class="metric-label">Customer Satisfaction Score Improvement</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-number">-20%</div>
+                        <div class="metric-label">Churn Rate Reduction</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-number">80%</div>
+                        <div class="metric-label">Proactive Resolution Rate</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-number">-40%</div>
+                        <div class="metric-label">Mean Time to Resolution</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-number">+30%</div>
+                        <div class="metric-label">Network Operations Efficiency</div>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <h3>ROI Impact</h3>
+                    <p>Projected positive ROI within 12 months of full deployment</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 14: Next Steps -->
+        <div class="slide" data-slide="14">
+            <div class="slide-header">
+                <h2 class="slide-title">Next Steps</h2>
+                <p class="slide-subtitle">Moving Forward with CareStream360</p>
+            </div>
+            <div class="slide-content">
+                <ul class="bullet-list">
+                    <li>Approval for Phase 1 pilot deployment in selected regions</li>
+                    <li>Resource allocation for development and operations teams</li>
+                    <li>Stakeholder alignment and project governance setup</li>
+                    <li>Partner selection for AI development and system integration</li>
+                    <li>Timeline confirmation and milestone scheduling</li>
+                </ul>
+                <div class="highlight-box">
+                    <h3>Call to Action</h3>
+                    <p>Let's revolutionize customer experience at Telkom together</p>
+                    <p><strong>Start Date: Q1 2025</strong></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+            <div class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">14</span>
+            </div>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+        </div>
+        
+        <!-- Slide Overview -->
+        <div class="slide-overview" onclick="toggleOverview()">
+            ☰ Menu
+            <div class="overview-menu" id="overviewMenu">
+                <div class="overview-item" onclick="goToSlide(1)">1. Title Slide</div>
+                <div class="overview-item" onclick="goToSlide(2)">2. Problem Statement</div>
+                <div class="overview-item" onclick="goToSlide(3)">3. Solution Overview</div>
+                <div class="overview-item" onclick="goToSlide(4)">4. Key Innovation</div>
+                <div class="overview-item" onclick="goToSlide(5)">5. System Architecture</div>
+                <div class="overview-item" onclick="goToSlide(6)">6. Real-Time Monitoring</div>
+                <div class="overview-item" onclick="goToSlide(7)">7. QoE Scoring Engine</div>
+                <div class="overview-item" onclick="goToSlide(8)">8. Proactive Customer Care</div>
+                <div class="overview-item" onclick="goToSlide(9)">9. Predictive Analytics</div>
+                <div class="overview-item" onclick="goToSlide(10)">10. Dashboard &amp; Insights</div>
+                <div class="overview-item" onclick="goToSlide(11)">11. Business Benefits</div>
+                <div class="overview-item" onclick="goToSlide(12)">12. Implementation Roadmap</div>
+                <div class="overview-item" onclick="goToSlide(13)">13. Expected Outcomes</div>
+                <div class="overview-item" onclick="goToSlide(14)">14. Next Steps</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentSlideNumber = 1;
+        const totalSlides = 14;
+        
+        function updateSlideDisplay() {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show current slide
+            const currentSlide = document.querySelector(`[data-slide="${currentSlideNumber}"]`);
+            if (currentSlide) {
+                currentSlide.classList.add('active');
+            }
+            
+            // Update counter
+            document.getElementById('currentSlide').textContent = currentSlideNumber;
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlideNumber === 1;
+            document.getElementById('nextBtn').disabled = currentSlideNumber === totalSlides;
+        }
+        
+        function changeSlide(direction) {
+            const newSlideNumber = currentSlideNumber + direction;
+            
+            if (newSlideNumber >= 1 && newSlideNumber <= totalSlides) {
+                currentSlideNumber = newSlideNumber;
+                updateSlideDisplay();
+            }
+        }
+        
+        function goToSlide(slideNumber) {
+            if (slideNumber >= 1 && slideNumber <= totalSlides) {
+                currentSlideNumber = slideNumber;
+                updateSlideDisplay();
+                toggleOverview(); // Close menu after selection
+            }
+        }
+        
+        function toggleOverview() {
+            const menu = document.getElementById('overviewMenu');
+            menu.classList.toggle('show');
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case 'ArrowRight':
+                case 'Space':
+                    e.preventDefault();
+                    changeSlide(1);
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    changeSlide(-1);
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(1);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides);
+                    break;
+                case 'Escape':
+                    const menu = document.getElementById('overviewMenu');
+                    if (menu.classList.contains('show')) {
+                        toggleOverview();
+                    }
+                    break;
+            }
+        });
+        
+        // Close overview menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const overview = document.querySelector('.slide-overview');
+            const menu = document.getElementById('overviewMenu');
+            
+            if (!overview.contains(e.target) && menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            }
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSlideDisplay();
+            document.getElementById('totalSlides').textContent = totalSlides;
+        });
+        
+        // Add smooth transitions for feature cards
+        document.querySelectorAll('.feature-card, .module-box, .metric-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
